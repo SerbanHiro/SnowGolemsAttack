@@ -26,7 +26,9 @@ public class ListenerTEst implements Listener {
                         player = (Player) projectile.getShooter();
                     }
                 }
-                if (player != null) {
+
+                boolean isFriendly = SnowGolemTest.instance.getConfig().getBoolean("friendly", false); // Get the value from the config.yml
+                if (player != null && (isFriendly && !(player instanceof Player) || (!isFriendly && player instanceof Player))) {
                     snowman.setTarget(player);
                     snowman.setAI(true);
                 }
@@ -39,9 +41,9 @@ public class ListenerTEst implements Listener {
         if (event.getEntity() instanceof Snowball) {
             Snowball snowball = (Snowball) event.getEntity();
             if (snowball.getShooter() instanceof Snowman) {
-                if (event.getHitEntity() instanceof Player) {
-                    Player player = (Player) event.getHitEntity();
-                    player.damage(SnowGolemTest.instance.getConfig().getInt("damage")); //deals 5 hearts of damage
+                if (event.getHitEntity() instanceof LivingEntity) { // Changed from Player to LivingEntity to target any mob
+                    LivingEntity target = (LivingEntity) event.getHitEntity();
+                    target.damage(SnowGolemTest.instance.getConfig().getInt("damage")); //deals 5 hearts of damage
                 }
             }
         }
@@ -79,3 +81,4 @@ public class ListenerTEst implements Listener {
         return target;
     }
 }
+
